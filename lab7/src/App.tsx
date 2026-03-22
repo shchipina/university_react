@@ -4,6 +4,7 @@ import GalleryComponent from './components/GalleryComponent/GalleryComponent';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import FilterBar from './components/FilterBar/FilterBar';
 import DeletedPets from './components/DeletedPets/DeletedPets';
+import ApiPetList from './components/ApiPetList/ApiPetList';
 import Toast from './components/Toast/Toast';
 import { usePetStore } from './store/usePetStore';
 
@@ -71,7 +72,7 @@ export default function App() {
           <ThemeToggle isDark={isDarkTheme} onToggle={toggleTheme} />
         </div>
 
-        <div className="mb-6 flex gap-4">
+        <div className="mb-6 flex gap-4 flex-wrap">
           <button
             onClick={() => setViewMode('active')}
             className={`px-6 py-2 rounded-lg font-medium transition-colors ${viewMode === 'active'
@@ -89,6 +90,15 @@ export default function App() {
               }`}
           >
             Видалені ({deletedPets.length})
+          </button>
+          <button
+            onClick={() => setViewMode('api')}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${viewMode === 'api'
+              ? 'bg-green-600 text-white'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+              }`}
+          >
+            API Собаки
           </button>
         </div>
 
@@ -118,12 +128,14 @@ export default function App() {
               />
             </div>
           </div>
-        ) : (
+        ) : viewMode === 'deleted' ? (
           <DeletedPets
             pets={deletedPets}
             onRestore={restorePet}
             onPermanentDelete={permanentDeletePet}
           />
+        ) : (
+          <ApiPetList />
         )}
       </div>
 

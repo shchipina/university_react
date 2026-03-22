@@ -12,7 +12,7 @@ export type Pet = {
 };
 
 export type FilterMode = 'all' | 'favorites' | 'vaccinated';
-export type ViewMode = 'active' | 'deleted';
+export type ViewMode = 'active' | 'deleted' | 'api';
 
 type ToastMessage = {
     message: string;
