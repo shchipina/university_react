@@ -4,6 +4,7 @@ import GalleryComponent from './components/GalleryComponent/GalleryComponent';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import FilterBar from './components/FilterBar/FilterBar';
 import DeletedPets from './components/DeletedPets/DeletedPets';
+import Toast from './components/Toast/Toast';
 
 export type Pet = {
   id: string;
@@ -25,6 +26,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('active');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   useEffect(() => {
     if (isDarkTheme) {
@@ -45,6 +47,8 @@ export default function App() {
       isFavorite: false,
     };
     setPets((prevPets) => [newPet, ...prevPets]);
+
+    setToast({ message: `Тваринку успішно додано до галереї!`, type: 'success' });
   };
 
   const handleDeletePet = (id: string) => {
@@ -52,6 +56,7 @@ export default function App() {
     if (petToDelete) {
       setDeletedPets((prev) => [petToDelete, ...prev]);
       setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
+      setToast({ message: `Тваринку переміщено в кошик`, type: 'info' });
     }
   };
 
@@ -60,11 +65,16 @@ export default function App() {
     if (petToRestore) {
       setPets((prev) => [petToRestore, ...prev]);
       setDeletedPets((prevDeleted) => prevDeleted.filter((pet) => pet.id !== id));
+      setToast({ message: `↺ Тваринку відновлено!`, type: 'success' });
     }
   };
 
   const handlePermanentDelete = (id: string) => {
+    const petToDelete = deletedPets.find(pet => pet.id === id);
     setDeletedPets((prevDeleted) => prevDeleted.filter((pet) => pet.id !== id));
+    if (petToDelete) {
+      setToast({ message: `Тваринку видалено назавжди`, type: 'info' });
+    }
   };
 
   const handleToggleFavorite = (id: string) => {
@@ -115,8 +125,8 @@ export default function App() {
           <button
             onClick={() => setViewMode('active')}
             className={`px-6 py-2 rounded-lg font-medium transition-colors ${viewMode === 'active'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
               }`}
           >
             Активні ({pets.length})
@@ -124,8 +134,8 @@ export default function App() {
           <button
             onClick={() => setViewMode('deleted')}
             className={`px-6 py-2 rounded-lg font-medium transition-colors ${viewMode === 'deleted'
-                ? 'bg-red-600 text-white'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+              ? 'bg-red-600 text-white'
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
               }`}
           >
             Видалені ({deletedPets.length})
@@ -166,6 +176,14 @@ export default function App() {
           />
         )}
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }
