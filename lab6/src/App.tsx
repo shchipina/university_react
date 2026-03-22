@@ -1,32 +1,31 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import GalleryForm from './components/GalleryForm/GalleryForm';
 import GalleryComponent from './components/GalleryComponent/GalleryComponent';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import FilterBar from './components/FilterBar/FilterBar';
 import DeletedPets from './components/DeletedPets/DeletedPets';
 import Toast from './components/Toast/Toast';
-
-export type Pet = {
-  id: string;
-  name: string;
-  type: string;
-  age: string;
-  description: string;
-  isVaccinated: boolean;
-  isFavorite: boolean;
-};
-
-export type FilterMode = 'all' | 'favorites' | 'vaccinated';
-export type ViewMode = 'active' | 'deleted';
+import { usePetStore } from './store/usePetStore';
 
 export default function App() {
-  const [pets, setPets] = useState<Pet[]>([]);
-  const [deletedPets, setDeletedPets] = useState<Pet[]>([]);
-  const [filterMode, setFilterMode] = useState<FilterMode>('all');
-  const [viewMode, setViewMode] = useState<ViewMode>('active');
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const pets = usePetStore((state) => state.pets);
+  const deletedPets = usePetStore((state) => state.deletedPets);
+  const filterMode = usePetStore((state) => state.filterMode);
+  const viewMode = usePetStore((state) => state.viewMode);
+  const selectedType = usePetStore((state) => state.selectedType);
+  const isDarkTheme = usePetStore((state) => state.isDarkTheme);
+  const toast = usePetStore((state) => state.toast);
+
+  const addPet = usePetStore((state) => state.addPet);
+  const deletePet = usePetStore((state) => state.deletePet);
+  const restorePet = usePetStore((state) => state.restorePet);
+  const permanentDeletePet = usePetStore((state) => state.permanentDeletePet);
+  const toggleFavorite = usePetStore((state) => state.toggleFavorite);
+  const setFilterMode = usePetStore((state) => state.setFilterMode);
+  const setViewMode = usePetStore((state) => state.setViewMode);
+  const setSelectedType = usePetStore((state) => state.setSelectedType);
+  const toggleTheme = usePetStore((state) => state.toggleTheme);
+  const clearToast = usePetStore((state) => state.clearToast);
 
   useEffect(() => {
     if (isDarkTheme) {
@@ -35,55 +34,6 @@ export default function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkTheme]);
-
-  const handleToggleTheme = () => {
-    setIsDarkTheme((prev) => !prev);
-  };
-
-  const handleAddPet = (newPetData: Omit<Pet, 'id' | 'isFavorite'>) => {
-    const newPet: Pet = {
-      ...newPetData,
-      id: crypto.randomUUID(),
-      isFavorite: false,
-    };
-    setPets((prevPets) => [newPet, ...prevPets]);
-
-    setToast({ message: `Тваринку успішно додано до галереї!`, type: 'success' });
-  };
-
-  const handleDeletePet = (id: string) => {
-    const petToDelete = pets.find(pet => pet.id === id);
-    if (petToDelete) {
-      setDeletedPets((prev) => [petToDelete, ...prev]);
-      setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
-      setToast({ message: `Тваринку переміщено в кошик`, type: 'info' });
-    }
-  };
-
-  const handleRestorePet = (id: string) => {
-    const petToRestore = deletedPets.find(pet => pet.id === id);
-    if (petToRestore) {
-      setPets((prev) => [petToRestore, ...prev]);
-      setDeletedPets((prevDeleted) => prevDeleted.filter((pet) => pet.id !== id));
-      setToast({ message: `↺ Тваринку відновлено!`, type: 'success' });
-    }
-  };
-
-  const handlePermanentDelete = (id: string) => {
-    const petToDelete = deletedPets.find(pet => pet.id === id);
-    setDeletedPets((prevDeleted) => prevDeleted.filter((pet) => pet.id !== id));
-    if (petToDelete) {
-      setToast({ message: `Тваринку видалено назавжди`, type: 'info' });
-    }
-  };
-
-  const handleToggleFavorite = (id: string) => {
-    setPets((prevPets) =>
-      prevPets.map((pet) =>
-        pet.id === id ? { ...pet, isFavorite: !pet.isFavorite } : pet
-      )
-    );
-  };
 
   const availableTypes = useMemo(() => {
     const types = new Set(pets.map(pet => pet.type));
@@ -118,7 +68,7 @@ export default function App() {
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
             Галерея Домашніх Улюбленців
           </h1>
-          <ThemeToggle isDark={isDarkTheme} onToggle={handleToggleTheme} />
+          <ThemeToggle isDark={isDarkTheme} onToggle={toggleTheme} />
         </div>
 
         <div className="mb-6 flex gap-4">
@@ -145,7 +95,7 @@ export default function App() {
         {viewMode === 'active' ? (
           <div className="flex flex-col lg:flex-row gap-8 items-start">
             <div className="w-full lg:w-1/3 sticky top-10">
-              <GalleryForm onAddPet={handleAddPet} />
+              <GalleryForm onAddPet={addPet} />
             </div>
 
             <div className="w-full lg:w-2/3 space-y-6">
@@ -161,8 +111,8 @@ export default function App() {
 
               <GalleryComponent
                 pets={filteredPets}
-                onDelete={handleDeletePet}
-                onToggleFavorite={handleToggleFavorite}
+                onDelete={deletePet}
+                onToggleFavorite={toggleFavorite}
                 filterMode={filterMode}
                 selectedType={selectedType}
               />
@@ -171,8 +121,8 @@ export default function App() {
         ) : (
           <DeletedPets
             pets={deletedPets}
-            onRestore={handleRestorePet}
-            onPermanentDelete={handlePermanentDelete}
+            onRestore={restorePet}
+            onPermanentDelete={permanentDeletePet}
           />
         )}
       </div>
@@ -181,7 +131,7 @@ export default function App() {
         <Toast
           message={toast.message}
           type={toast.type}
-          onClose={() => setToast(null)}
+          onClose={clearToast}
         />
       )}
     </div>
