@@ -81,7 +81,7 @@ export default function DeletedPets({ pets, onRestore, onPermanentDelete }: Dele
                                     }
                                 }}
                             >
-                                🗑️ Назавжди
+                                Назавжди
                             </ButtonComponent>
                         </div>
                     </div>
