@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 
 export type Theme = 'light' | 'dark';
 
@@ -50,9 +51,11 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     const root = document.documentElement;
+
+    root.setAttribute('data-theme', theme);
+
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    root.setAttribute('data-theme', theme);
   }, [theme]);
 
   useEffect(() => {

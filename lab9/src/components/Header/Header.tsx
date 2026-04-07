@@ -35,6 +35,17 @@ export default function Header() {
                 Улюбленці
               </NavLink>
               <NavLink
+                to="/ui-kit"
+                className={({ isActive }) =>
+                  `px-4 py-2 rounded-lg font-medium transition-colors ${isActive
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`
+                }
+              >
+                UI Kit
+              </NavLink>
+              <NavLink
                 to="/about"
                 className={({ isActive }) =>
                   `px-4 py-2 rounded-lg font-medium transition-colors ${isActive

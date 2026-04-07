@@ -1,0 +1,138 @@
+.card {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: 
+    box-shadow var(--transition-base) var(--ease-in-out),
+    transform var(--transition-base) var(--ease-in-out),
+    border-color var(--transition-base) var(--ease-in-out);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.elevated {
+  box-shadow: var(--shadow-md);
+}
+
+.elevated:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.outlined {
+  border: 2px solid var(--color-border-primary);
+  box-shadow: none;
+}
+
+.outlined:hover {
+  border-color: var(--color-border-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.flat {
+  border: none;
+  box-shadow: none;
+}
+
+.flat:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+.header {
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.headerSubtitle {
+  margin: var(--spacing-1) 0 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.body {
+  padding: var(--spacing-5);
+}
+
+.bodyCompact {
+  padding: var(--spacing-4);
+}
+
+.bodySpacious {
+  padding: var(--spacing-6);
+}
+
+.footer {
+  padding: var(--spacing-4) var(--spacing-5);
+  border-top: 1px solid var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.footerStart {
+  justify-content: flex-start;
+}
+
+.footerCenter {
+  justify-content: center;
+}
+
+.footerSpaceBetween {
+  justify-content: space-between;
+}
+
+.media {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mediaContainer {
+  overflow: hidden;
+  position: relative;
+}
+
+.mediaTop {
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.interactive:active {
+  transform: scale(0.99);
+}
+
+.sm {
+  max-width: 320px;
+}
+
+.md {
+  max-width: 480px;
+}
+
+.lg {
+  max-width: 640px;
+}
+
+.fullWidth {
+  width: 100%;
+  max-width: none;
+}

@@ -6,6 +6,7 @@ import PetDetailsPage from './pages/PetDetailsPage';
 import DeletedPetsPage from './pages/DeletedPetsPage';
 import ApiDogsPage from './pages/ApiDogsPage';
 import AboutPage from './pages/AboutPage';
+import UIKitPage from './pages/UIKitPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         </Route>
         <Route path="pet/:id" element={<PetDetailsPage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="ui-kit" element={<UIKitPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
